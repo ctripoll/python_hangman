@@ -13,31 +13,38 @@ def hangman(word):
               "|               "
               ]
     letters = list(word)
+    all_guesses = []
     board = ["__"] * len(word)
     did_win = False
     print("Welcome to Hangman!")
     while num_wrong < len(stages) - 1:
         print("\n")
-        message = "Guess a letter (a-z): "
+        message = "-> Guess a letter (a-z): "
         char = input(message)
-        if char in letters:
-            c = letters.index(char)
-            board[c] = char
-            letters[c] = '$'
+        if char not in all_guesses:
+            if char in letters:
+                indices = [i for i, c in enumerate(letters) if c == char]
+                for index in indices:
+                    board[index] = char
+                    letters[index] = '$'
+            else:
+                print("\nIncorrect")
+                num_wrong += 1
+            all_guesses.extend(char)
         else:
-            print("\nIncorrect")
-            num_wrong += 1
+            print("\nYou already guessed " + str(char))
         print(" ".join(board))
         e = num_wrong + 1
         print("\n".join(stages[0:e]))
+        print("\nPrevious guesses: " + ", ".join(str(g) for g in all_guesses))
         if "__" not in board:
-            print("You win!")
+            print("\nYou win!")
             print(" ".join(board))
             did_win = True
             break
     if not did_win:
         print("\n".join(stages[0:num_wrong]))
-        print("You lose! The word was {}".format(word))
+        print("\nYou lose! The word was {}".format(word))
 
 
 word_list = []
